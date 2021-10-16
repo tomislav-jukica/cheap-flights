@@ -57,16 +57,6 @@ const Filter = (props) => {
     setLoading(true);
     event.preventDefault();
 
-    // const filterData = {
-    //   origin: originLocation,
-    //   destination: destinationLocation,
-    //   departure: new Date(departureDate),
-    //   return: new Date(returnDate),
-    //   adults: +adultsNumber,
-    //   //   price: +maxPrice,
-    //   currency: currency,
-    // };
-
     const req = new XMLHttpRequest();
     let reqString = "https://test.api.amadeus.com/v2/shopping/flight-offers?";
     reqString += "originLocationCode=" + originLocation;
