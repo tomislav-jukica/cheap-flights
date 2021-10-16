@@ -8,9 +8,9 @@ export class Results extends Component {
     this.state = { results: props.data, dataRows: [] };
   }
 
-  refreshList() {
+  refreshList(data) {
     let rows = [];
-    this.state.results.forEach((e) => {
+    data.forEach((e) => {
       let cell = [];
       for (let i = 0; i < Object.keys(e).length - 1; i++) {
         const prop = Object.keys(e)[i];
@@ -20,15 +20,21 @@ export class Results extends Component {
           </td>
         );
       }
-      rows.push(<tr className="row" key={this.state.results.indexOf(e)}>{cell}</tr>);
+      rows.push(<tr className="row" key={data.indexOf(e)}>{cell}</tr>);
     });
     this.setState({ dataRows: rows }, function () {
+      // console.log(this.state.dataRows);
     });
   }
 
   componentDidMount() {
-    this.refreshList();
+    this.refreshList(this.props.data);
   }
+  componentDidUpdate(prevProps) {
+    if (this.props.data !== prevProps.data) {   
+      this.refreshList(this.props.data);
+    } 
+}
 
   render() {
     if (this.state.dataRows.length === 0) {

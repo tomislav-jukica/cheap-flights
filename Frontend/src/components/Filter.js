@@ -3,6 +3,7 @@ import "./Filter.css";
 
 const Filter = (props) => {
   const [authToken, setAuthToken] = useState("");
+  const [loading, setLoading] = useState(false);
   if (authToken === "") {
     authorization();
   }
@@ -53,6 +54,7 @@ const Filter = (props) => {
   };
 
   const submitHandler = (event) => {
+    setLoading(true);
     event.preventDefault();
 
     // const filterData = {
@@ -93,6 +95,7 @@ const Filter = (props) => {
           if (req.readyState === 4) {
             if (req.status === 200) {
               props.onFilter(JSON.parse(req.responseText));
+              setLoading(false);
             } else {
               console.log(req.statusText);
             }
@@ -106,7 +109,6 @@ const Filter = (props) => {
           if (req.readyState === 4) {
             if (req.status === 200) {
               saveResults(JSON.parse(req.responseText).data, filterObject[1]);
-              console.log(JSON.parse(req.responseText).data);
             } else {
               console.log(req.statusText);
             }
@@ -115,8 +117,6 @@ const Filter = (props) => {
         req.send();
       }
     });
-
-    
   };
 
   function saveResults(data, filterId) {
@@ -151,7 +151,9 @@ const Filter = (props) => {
       };
       flights.push(flightData);
     }
-    console.log(JSON.stringify(flights));
+  
+    props.onFilter(flights);
+    setLoading(false);
     const req = new XMLHttpRequest();
     req.open("POST", "http://localhost:5000/api/results");
     req.setRequestHeader("Content-Type", "application/json");
@@ -219,7 +221,11 @@ const Filter = (props) => {
         </div>
       </div>
       <div>
-        <button type="submit">Pretraži</button>
+        {loading ? (
+          <button>Učitavanje...</button>
+        ) : (
+          <button type="submit">Pretraži</button>
+        )}
       </div>
     </form>
   );

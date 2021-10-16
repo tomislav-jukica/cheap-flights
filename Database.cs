@@ -44,13 +44,22 @@ namespace WebAPI {
         public DataTable GetFilters(string filter) {
             DataTable table = new DataTable();
 
-            OpenConnection();
-            SQLiteCommand command = conn.CreateCommand();
-            command.CommandText = "SELECT * FROM Filters WHERE Filters.filter ='" + filter + "'";
-            SQLiteDataReader reader;
-            reader = command.ExecuteReader();
-            table.Load(reader);
-            CloseConnection();
+            //OpenConnection();
+            using (SQLiteConnection con = new SQLiteConnection("Data Source=db.db;Version=3;New=True;Compress=True;")) {
+                con.Open();
+                string commandText = "SELECT * FROM Filters WHERE Filters.filter ='" + filter + "'";
+                using (SQLiteCommand cmd = new SQLiteCommand(commandText, con)) {
+                    using(SQLiteDataReader reader = cmd.ExecuteReader()) {
+                        table.Load(reader);
+                    }
+                }
+            }
+            //SQLiteCommand command = conn.CreateCommand();
+  
+            //SQLiteDataReader reader;
+            //reader = command.ExecuteReader();
+            //table.Load(reader);
+            //CloseConnection();
 
             return table;
         }
@@ -85,19 +94,36 @@ namespace WebAPI {
         }
 
         public void InsertFlight(Flight flight) {
-            OpenConnection();
-            SQLiteCommand command = conn.CreateCommand();
-            command.CommandText = "INSERT INTO Flights VALUES(NULL, "
-                + flight.Filter + ", '" 
-                + flight.Origin + "','" 
-                + flight.Destination + "','" 
-                + flight.Date + "'," 
-                + flight.NumberOfSeats 
-                + "," + flight.NumberOfStops 
-                + ",'" + flight.Currency + "','" 
+            //OpenConnection();
+
+            using (SQLiteConnection con = new SQLiteConnection("Data Source=db.db;Version=3;New=True;Compress=True;")) {
+                con.Open();
+                string commandText = "INSERT INTO Flights VALUES(NULL, "
+                + flight.Filter + ", '"
+                + flight.Origin + "','"
+                + flight.Destination + "','"
+                + flight.Date + "',"
+                + flight.NumberOfSeats
+                + "," + flight.NumberOfStops
+                + ",'" + flight.Currency + "','"
                 + flight.TotalPrice + "')";
-            command.ExecuteNonQuery();
-            CloseConnection();
+                using (SQLiteCommand cmd = new SQLiteCommand(commandText, con)) {
+                    cmd.ExecuteNonQuery();
+                }
+            }
+
+            //SQLiteCommand command = conn.CreateCommand();
+            //command.CommandText = "INSERT INTO Flights VALUES(NULL, "
+            //    + flight.Filter + ", '" 
+            //    + flight.Origin + "','" 
+            //    + flight.Destination + "','" 
+            //    + flight.Date + "'," 
+            //    + flight.NumberOfSeats 
+            //    + "," + flight.NumberOfStops 
+            //    + ",'" + flight.Currency + "','" 
+            //    + flight.TotalPrice + "')";
+            //command.ExecuteNonQuery();
+            //CloseConnection();
         }
 
         public List<Flight> GetFlights(int filterId) {

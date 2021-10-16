@@ -15,7 +15,6 @@ export default class App extends Component {
 
   filterHandler = (data) => {
     this.setState({ flightData: data });
-    console.log(this.state.flightData);
   };
 
   render() {
