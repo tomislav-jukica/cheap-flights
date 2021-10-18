@@ -8,11 +8,11 @@ a {
   border-color: #1861ac;
 }
 
-.main {
-    width: 1600px;
-    margin: auto;
-    margin-top: 50px;
-}
+/* .main {
+  max-width: 1600px;
+  margin: auto;
+  margin-top: 50px;
+} */
 
 .title {
   padding-top: 20px;
